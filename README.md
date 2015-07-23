@@ -10,13 +10,13 @@ The code is inspired by [PyXero](http://github.com/freakboy3742/pyxero), and aim
 At present, the library is not available in PyPI but can be installed from GitHub:
 
 ```
-pip install git+git://github.com/gavinhodge/pyliquidplanner.git
+pip install git+git://github.com/impulse-cloud/pyliquidplanner.git
 ```
 
 Alternatively, if you don't have Git installed:
 
 ```
-pip install --upgrade https://github.com/gavinhodge/pyliquidplanner/tarball/master
+pip install --upgrade https://github.com/impulse-cloud/pyliquidplanner/tarball/master
 ```
 
 ## Quickstart:
@@ -120,5 +120,5 @@ This library is very new and still a work in progress. Some things I would like 
 
 Contributions are most welcome by submitting a pull request.
 
-If you have any problems with PyLiquidPlanner, you can [log an issue](http://github.com/gavinhodge/pyliquidplanner/issues) on GitHub.
+If you have any problems with PyLiquidPlanner, you can [log an issue](http://github.com/impulse-cloud/pyliquidplanner/issues) on GitHub.
 
