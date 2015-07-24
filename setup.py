@@ -28,5 +28,9 @@ setup(
     install_requires=[
         'requests>=2.7.0',
     ],
+    tests_require=[
+        'mock',
+    ],
     license='MIT',
+    test_suite='tests',
 )

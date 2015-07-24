@@ -58,7 +58,7 @@ class Manager(object):
             raise LiquidPlannerUnprocessableEntity(response)
 
         elif response.status_code == 404:
-            raise LiquidPlannerUnprocessableEntity(response)
+            raise LiquidPlannerNotFound(response)
 
         elif response.status_code == 500:
             raise LiquidPlannerInternalError(response)
