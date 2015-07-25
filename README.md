@@ -116,9 +116,19 @@ This library is very new and still a work in progress. Some things I would like 
 * Save and retrieve of attachments
 * Unit tests
 
+## Tests
+
+To run the unit tests, run the following from the root directory of the project:
+
+```
+$ python setup.py test
+```
+
+This is will install any test dependencies (Mock) into your environment and execute the unit tests.
+
 ## Contributing
 
-Contributions are most welcome by submitting a pull request.
+Contributions are most welcome by submitting a pull request. Please try to include test coverage of any new features or bug fixes.
 
 If you have any problems with PyLiquidPlanner, you can [log an issue](http://github.com/impulse-cloud/pyliquidplanner/issues) on GitHub.
 
