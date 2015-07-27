@@ -66,9 +66,25 @@ The following entities are supported at present:
 
 * Account
 * Workspaces
+* Activities
+* Checklist Items
 * Clients
+* Comments
+* Custom Fields
+* Documents
+* Events
+* Folders
+* Links
+* Members
+* Milestones
+* Packages
 * Projects
+* Tags
 * Tasks
+* Teams
+* Timesheets
+* Tree Items
+* Webhooks
 
 ### Reading
 
