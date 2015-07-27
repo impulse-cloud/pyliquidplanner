@@ -7,12 +7,21 @@ from .exceptions import *
 
 class Manager(object):
 
-    def __init__(self, api, name, url):
-        self.api = api
+    def __init__(self, config, name, url, options):
+        self.config = config
         self.name = name
         self.url = url
+        self.options = options
 
-        self.singular = self.name[:-1]
+        # Special plural handling for entities ending in 'y' 
+        if self.name[-3:] == 'ies':
+            self.singular = self.name[:-3] + 'y'
+        elif self.name[-1] == 's':
+            self.singular = self.name[:-1]
+        else:
+            self.singular = self.name
+
+        self.singular = self.singular.replace('_', '')
 
         self.base_url = "https://app.liquidplanner.com/api"
         self.timeout = 10 # seconds
@@ -42,7 +51,7 @@ class Manager(object):
         full_uri = self.base_url + url
 
         response = getattr(requests, method)(
-            full_uri, data=serialized_data, headers=headers, auth=self.api.credentials.auth,
+            full_uri, data=serialized_data, headers=headers, auth=self.config.credentials.auth,
             timeout=self.timeout)
 
         if response.status_code in [200, 201]:
@@ -82,7 +91,7 @@ class Manager(object):
             tokens = {}
 
         if not 'workspace_id' in tokens:
-            tokens['workspace_id'] = self.api.workspace_id
+            tokens['workspace_id'] = self.config.workspace_id
 
         return url.format(**tokens)
 
@@ -91,6 +100,9 @@ class Manager(object):
         url = self._format_url(self.url)
 
         return self._make_request('get', url)
+
+    def _help_json(self):
+        return self._make_request('get', 'help.json')
 
     def get(self, id):
         """Get the record with the given id"""

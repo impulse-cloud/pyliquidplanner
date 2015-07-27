@@ -13,7 +13,7 @@ class LiquidPlannerException(Exception):
     def extract_message_from_response(self, response):
         if response.headers['content-type'].startswith('application/json'):
             data = json.loads(response.text)
-            msg = "{}: {}".format(data["error"], data["message"])
+            msg = "{}: {}".format(data.get("error", ""), data.get("message", ""))
             
             return msg
 

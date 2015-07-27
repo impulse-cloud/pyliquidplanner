@@ -203,17 +203,30 @@ class ManagerTest(unittest.TestCase):
         r_put.return_value = create_success_response(200, expected_output) 
 
         # id should be stripped from the object
-        result = lp.clients.create({"id": 1, "name": "Trevor"})
+        result = lp.clients.update({"id": 1, "name": "Trevor"})
 
         self.assertTrue(r_put.called)
-        r_post.assert_called_with(ANY, data=json.dumps(expected_put),
+        r_put.assert_called_with(ANY, data=json.dumps(expected_put),
                 auth=ANY, headers=ANY, timeout=ANY)
 
         # id as a parameter
         r_put.reset_mock()
         r_put.return_value = create_success_response(200, expected_output) 
-        result = lp.clients.create({"name": "Trevor"}, 1)
+        result = lp.clients.update({"name": "Trevor"}, 1)
 
         self.assertTrue(r_put.called)
-        r_post.assert_called_with(ANY, data=json.dumps(expected_put),
+        r_put.assert_called_with(ANY, data=json.dumps(expected_put),
                 auth=ANY, headers=ANY, timeout=ANY)
+
+    def test_singular(self):
+        "Make sure object singular names are determined correctly"
+
+        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
+
+        self.assertEqual(lp.projects.singular, "project")
+
+        self.assertEqual(lp.account.singular, "account")
+
+        self.assertEqual(lp.custom_fields.singular, "customfield")
+
+        self.assertEqual(lp.partial_day_events.singular, "partialdayevent")
