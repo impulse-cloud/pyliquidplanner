@@ -21,8 +21,6 @@ class Manager(object):
         else:
             self.singular = self.name
 
-        self.singular = self.singular.replace('_', '')
-
         self.base_url = "https://app.liquidplanner.com/api"
         self.timeout = 10 # seconds
 
@@ -136,7 +134,7 @@ class Manager(object):
     def _help_json(self):
         return self._make_request('get', 'help.json')
 
-    def get(self, id, include=None):
+    def get(self, id, include=None, depth=None, leaves=None, item_context=None, filter_context=None):
         """Get the record with the given id
         
         :param include: optional list of related entities to include"""
@@ -144,6 +142,18 @@ class Manager(object):
 
         if include is not None:
             params["include"] = ",".join(include)
+
+        if depth is not None:
+            params["depth"] = depth
+
+        if leaves is not None:
+            params["leaves"] = str(item_context).lower()
+
+        if item_context is not None:
+            params["item_context"] = str(item_context).lower()
+
+        if filter_context is not None:
+            params["filter_context"] = str(filter_context).lower()
         
         
         url = self._format_url(self.url + "/{id}", {"id": id})

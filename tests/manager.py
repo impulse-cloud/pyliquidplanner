@@ -190,7 +190,7 @@ class ManagerTest(unittest.TestCase):
 
         self.assertTrue(r_post.called)
         r_post.assert_called_with(ANY, data=json.dumps(expected_post),
-                auth=ANY, headers=ANY, timeout=ANY)
+                auth=ANY, headers=ANY, timeout=ANY, params=ANY)
 
     @patch('requests.put')
     def test_update(self, r_put):
@@ -207,7 +207,7 @@ class ManagerTest(unittest.TestCase):
 
         self.assertTrue(r_put.called)
         r_put.assert_called_with(ANY, data=json.dumps(expected_put),
-                auth=ANY, headers=ANY, timeout=ANY)
+                auth=ANY, headers=ANY, timeout=ANY, params=ANY)
 
         # id as a parameter
         r_put.reset_mock()
@@ -216,7 +216,7 @@ class ManagerTest(unittest.TestCase):
 
         self.assertTrue(r_put.called)
         r_put.assert_called_with(ANY, data=json.dumps(expected_put),
-                auth=ANY, headers=ANY, timeout=ANY)
+                auth=ANY, headers=ANY, timeout=ANY, params=ANY)
 
     def test_singular(self):
         "Make sure object singular names are determined correctly"
@@ -227,6 +227,7 @@ class ManagerTest(unittest.TestCase):
 
         self.assertEqual(lp.account.singular, "account")
 
-        self.assertEqual(lp.custom_fields.singular, "customfield")
+        self.assertEqual(lp.custom_fields.singular, "custom_field")
 
-        self.assertEqual(lp.partial_day_events.singular, "partialdayevent")
+        self.assertEqual(lp.activities.singular, "activity")
+
