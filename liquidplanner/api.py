@@ -46,6 +46,14 @@ class LiquidPlanner(object):
             ('webhooks', '/workspaces/{workspace_id}/webhooks', {}),
     )
 
+    # Valid options for the include parameter. Not enforced, but here as
+    # a reference (and can be passed if you want to include everything)
+    ASSOCIATED_RECORDS = [
+            'activities', 'comments', 'dependencies', 'dependents',
+            'documents', 'estimates', 'links', 'note', 'snapshots',
+            'tags', 'timer'
+    ]
+
     def __init__(self, credentials, use_first_workspace=True):
         self.workspace_id = None
         self.credentials = credentials

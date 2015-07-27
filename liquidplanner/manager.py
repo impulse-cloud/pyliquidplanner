@@ -51,8 +51,8 @@ class Manager(object):
         full_uri = self.base_url + url
 
         response = getattr(requests, method)(
-            full_uri, data=serialized_data, headers=headers, auth=self.config.credentials.auth,
-            timeout=self.timeout)
+            full_uri, data=serialized_data, headers=headers, params=params,
+            auth=self.config.credentials.auth, timeout=self.timeout)
 
         if response.status_code in [200, 201]:
             return self._parse_api_response(response)
@@ -95,20 +95,60 @@ class Manager(object):
 
         return url.format(**tokens)
 
-    def all(self):
-        """Fetch all records"""
+    def all(self, include=None, filters=None, filter_conjunction=None,
+            order=None, limit=None, depth=None, leaves=None):
+        """Fetch all records
+        
+        :param include: list of related entities to include
+        :param filters: list of filters to apply
+        :param filter_conjunction: can be 'OR' to change default from 'AND'
+        :param order: sort order, one of 'earliest_start' or 'updated_at'
+        :param limit: max number of records to return
+        :param depth: limit tree depth (only makes sense for treeitems)
+        :param leaves: include leaf nodes (only makes sense for treeitems)"""
+        params = {}
+
+        if include is not None:
+            params["include"] = ",".join(include)
+
+        if filters is not None:
+            params["filter[]"] = filters
+
+        if filter_conjunction is not None:
+            params["filter_conjunction"] = filter_conjunction
+
+        if order is not None:
+            params["order"] = order
+
+        if limit is None:
+            params["limit"] = limit
+
+        if depth is not None:
+            params["depth"] = depth
+
+        if leaves:
+            params["leaves"] = "true"
+
         url = self._format_url(self.url)
 
-        return self._make_request('get', url)
+        return self._make_request('get', url, params=params)
 
     def _help_json(self):
         return self._make_request('get', 'help.json')
 
-    def get(self, id):
-        """Get the record with the given id"""
+    def get(self, id, include=None):
+        """Get the record with the given id
+        
+        :param include: optional list of related entities to include"""
+        params = {}
+
+        if include is not None:
+            params["include"] = ",".join(include)
+        
+        
         url = self._format_url(self.url + "/{id}", {"id": id})
 
-        return self._make_request('get', url)
+        return self._make_request('get', url, params=params)
 
     def update(self, obj, id=None):
         """Save an existing record.
