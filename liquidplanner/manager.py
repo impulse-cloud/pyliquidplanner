@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import requests
 
 from .exceptions import *
+from .models import Model
+
 
 class Manager(object):
 
@@ -53,7 +55,7 @@ class Manager(object):
             auth=self.config.credentials.auth, timeout=self.timeout)
 
         if response.status_code in [200, 201]:
-            return self._parse_api_response(response)
+            return self._parse_api_response(response, url)
 
         elif response.status_code == 400:
             raise LiquidPlannerBadRequest(response)
@@ -80,9 +82,20 @@ class Manager(object):
             raise LiquidPlannerException(response, 
                 msg="Unknown HTTP response code: {0}".format(response.status_code))
 
-    def _parse_api_response(self, response):
+    def _parse_api_response(self, response, base_url):
         # We expect only JSON encoded replies. We simply deserialize and return.
-        return response.json()
+        data = response.json()
+
+        if isinstance(data, dict):
+            # This is a single object response
+            return Model(self, data, base_url)
+        else:
+            # Multiple object response
+            items = []
+            for d in data:
+                uri = base_url + "/" + str(d.get("id", ""))
+                items.append(Model(self, d, uri))
+            return items
 
     def _format_url(self, url, tokens=None):
         if tokens is None:
