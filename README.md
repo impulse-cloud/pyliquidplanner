@@ -72,19 +72,31 @@ The following entities are supported at present:
 
 ### Reading
 
-This library does not attempt to wrap API responses into an object layer. It simply returns dictionaries in the exact format returned by the REST API. The only exception is that dates are converted into Python `datetime.datetime` objects. 
+This library wraps the objects returned in a `dict` like object. This is done so that related
+items can be accessed via the objects returned (see [Associated Objects](#associated-objects) below). Otherwise the data is returned as-is, except for dates which are converted into Python `datetime.datetime` objects. 
 
 Use `all()` to get a full list of entities.
 
 ```python
 >>> all_clients = lp.clients.all()
 ```
+Most API options are supported, including:
+
+* `include` - fetch related entities too
+* `filters` - filter the list of items returned
+* `order` - sort order of results
+* `limit` - limit the number of objects returned
 
 Use `get()` to fetch a specific entity by id.
 
 ```python
 >>> client = lp.clients.get(1234)
 ```
+
+Most API options are supported, including:
+
+* `include` - fetch related entities too
+* `depth` - max depth when fetching tree items
 
 ### Creating
 
@@ -106,15 +118,35 @@ Updating records is similar to creating. The record id can either be in the dict
 >>> client = lp.clients.update({'name': 'New Client Name'}, 1234)
 ```
 
+### Associated Objects
+
+The objects returned by `all()` and `get()` look and behave like Python `dict`s, but have a few properties available that allow access to associated objects. These properties have all the functionality of the main API endpoints.
+
+For example, you can retrieve comments for a given task:
+
+```python
+>>> task = lp.tasks.get(1234)
+>>> comments = task.comments.all()
+```
+
+Or create a comment for a given task:
+
+```python
+>>> task = lp.tasks.get(1234)
+>>> comment = task.comments.create({"description": "This is my comment"})
+```
+
+Updating and deleting works similarly.
+
+Note: This functionality is not available when you use the `include` parameter to make associated objects available for an `all()` or `get()` request. Only the outer object(s) have associated objects available.
+
 ## Future
 
 This library is very new and still a work in progress. Some things I would like to support in future include:
 
-* Filtering support for `all()`
-* Sub items, like comments for a Task
-* Assigning of people to Tasks
+* Support for the 'convenience methods' (e.g. assignments, re-ordering)
 * Save and retrieve of attachments
-* Unit tests
+* More tests
 
 ## Tests
 
