@@ -88,6 +88,11 @@ class Manager(object):
 
         if isinstance(data, dict):
             # This is a single object response
+
+            if response.request.method == "POST":
+                # This was a 'create', we need to add the object ID to the url
+                base_url = base_url + "/" + str(data.get("id", ""))
+
             return Model(self, data, base_url)
         else:
             # Multiple object response
@@ -114,7 +119,7 @@ class Manager(object):
         :param filters: list of filters to apply
         :param filter_conjunction: can be 'OR' to change default from 'AND'
         :param order: sort order, one of 'earliest_start' or 'updated_at'
-        :param limit: max number of records to return
+        :param limit: max number of records to return (only for tasks)
         :param depth: limit tree depth (only makes sense for treeitems)
         :param leaves: include leaf nodes (only makes sense for treeitems)"""
         params = {}
@@ -131,7 +136,7 @@ class Manager(object):
         if order is not None:
             params["order"] = order
 
-        if limit is None:
+        if limit is not None:
             params["limit"] = limit
 
         if depth is not None:
@@ -192,3 +197,8 @@ class Manager(object):
 
         return self._make_request('post', url, data={self.singular: obj})
 
+    def delete(self, id):
+        """Delete an existing record."""
+        url = self._format_url(self.url + "/{id}", {"id": id})
+
+        return self._make_request('delete', url)
