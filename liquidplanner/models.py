@@ -33,6 +33,119 @@ class Model(dict):
                     if isinstance(inner, dict):
                         self._convert_dates(inner)
 
+    def update_assignment(self, obj):
+        """Update assignment attributes for a treeitem.
+
+        Note: should only be used for tree item objects.
+
+        :param obj: dict of values to set"""
+        return self.manager._make_request('post', 
+                self.uri + '/update_assignment', data=obj)
+
+    def reorder_assignments(self, id_list):
+        """Reorder assignments for a treeitem.
+
+        Note: should only be used for tree item objects.
+
+        :param id_list: assignment ids in their new order"""
+        return self.manager._make_request('post',
+                self.uri + '/reorder_assignments', 
+                data={'assignment_ids': id_list})
+
+    def delete_assignment(self, id):
+        """Delete an assignment for a treeitem.
+
+        :param id: the assignment id"""
+        return self.manager._make_request('delete',
+                self.uri + '/assignments/' + str(id))
+
+    def move_before(self, other_id):
+        """Move this item before another item.
+
+        :param other_id: id of the item to move before"""
+        return self.manager._make_request('post',
+                self.uri + '/move_before',
+                params={'other_id': other_id})
+
+    def move_after(self, other_id):
+        """Move this item after another item.
+
+        :param other_id: id of the item to move after"""
+        return self.manager._make_request('post',
+                self.uri + '/move_after',
+                params={'other_id': other_id})
+
+    def package_before(self, other_id):
+        """Move the package priority of this item before another item.
+
+        :param other_id: id of the item to move before"""
+        return self.manager._make_request('post',
+                self.uri + '/package_before',
+                params={'other_id': other_id})
+
+    def package_after(self, other_id):
+        """Move ithe package priority of this item after another item.
+
+        :param other_id: id of the item to move after"""
+        return self.manager._make_request('post',
+                self.uri + '/package_after',
+                params={'other_id': other_id})
+
+    def thumbnail(self):
+        """Download a thumbnail of a document."""
+        return self.manager._make_request('get', self.uri + '/thumbnail')
+
+    def download(self):
+        """Download a document."""
+        return self.manager._make_request('get', self.uri + '/download')
+
+    def track_time(self, obj):
+        """Convenient way to track time and update estimates
+        
+        :param obj: values passed to the API"""
+        return self.manager._make_request('post', 
+                self.uri + '/track_time', data=obj)
+
+    def timer_commit(self, obj):
+        """Stop, use, and reset a timer.
+        
+        :param obj: values passed to the API"""
+        return self.manager._make_request('post', 
+                self.uri + '/timer/commit', data=obj)
+
+    def timer_start(self):
+        """Start the timer for a task"""
+        return self.manager.make_request('post', self.uri + '/timer/start')
+
+    def timer_stop(self):
+        """Stop the timer for a task"""
+        return self.manager.make_request('post', self.uri + '/timer/stop')
+
+    def timer_clear(self):
+        """Start the timer for a task"""
+        return self.manager.make_request('post', self.uri + '/timer/clear')
+
+    def comment_stream(self, params):
+        """Get the comment stream for a workspace.
+
+        :param obj: parameters added to the query string"""
+        return self.manager._make_request('get',
+                self.uri + '/comment_stream', params=params)
+
+    def upcoming_tasks(self, params):
+        """Get the upcoming tasks for a workspace.
+
+        :param obj: parameters added to the query string"""
+        return self.manager._make_request('get',
+                self.uri + '/upcoming_tasks', params=params)
+
+    def changes(self, params):
+        """Get the list of changes for a workspace.
+
+        :param obj: parameters added to the query string"""
+        return self.manager._make_request('get',
+                self.uri + '/changes', params=params)
+
     # This feels a little hackish and circular referencey. It works well though,
     # creating the managers on demand is efficient when retrieving long lists of
     # objects (as opposed to instantiating them as object attributes)
