@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 
+import datetime
 import requests
 
 from .exceptions import *
@@ -45,8 +46,13 @@ class Manager(object):
 
         serialized_data = None
         if data:
-            # JSON encode the body
-            serialized_data = json.dumps(data)
+            def default(obj):
+                if isinstance(obj, datetime.datetime):
+                    return obj.isoformat()
+                return obj
+
+            # JSON encode the body, with date handling
+            serialized_data = json.dumps(data, default=default)
 
         full_uri = self.base_url + url
 

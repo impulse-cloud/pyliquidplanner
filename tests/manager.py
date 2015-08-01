@@ -5,11 +5,13 @@ except ImportError:
     import unittest
 
 
+import datetime
 import json
 from mock import patch, Mock, ANY
 
 from liquidplanner import LiquidPlanner
 from liquidplanner.exceptions import *
+from liquidplanner.utils import UTC
 
 
 class MockCredentials(object):
@@ -216,6 +218,21 @@ class ManagerTest(unittest.TestCase):
 
         self.assertTrue(r_put.called)
         r_put.assert_called_with(ANY, data=json.dumps(expected_put),
+                auth=ANY, headers=ANY, timeout=ANY, params=ANY)
+
+    @patch('requests.put')
+    def test_date_encoding(self, r_put):
+        """Check that dates are JSON encoded correctly"""
+        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
+        lp.workspace_id = 1
+
+        obj = {"date": datetime.datetime(2015, 5, 2, 10, 0, 0, 0, tzinfo=UTC())}
+        expected_data = '{"client": {"date": "2015-05-02T10:00:00+00:00"}}'
+
+        r_put.return_value = create_success_response(200, {})
+        lp.clients.update(obj, 1)
+        
+        r_put.assert_called_with(ANY, data=expected_data,
                 auth=ANY, headers=ANY, timeout=ANY, params=ANY)
 
     @patch('requests.delete')
