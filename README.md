@@ -156,6 +156,30 @@ Updating and deleting works similarly.
 
 Note: This functionality is not available when you use the `include` parameter to make associated objects available for an `all()` or `get()` request. Only the outer object(s) have associated objects available.
 
+### Convenience Methods
+
+For certain objects, the API supports various convenince methods. The wrapper does not attempt to filter the convenience methods to their applicable object types, it is up to the developer to use the Liquid Planner API Guide.
+
+Supported convenience methods:
+
+* Tree Items
+  * Update Assignment
+  * Reorder Assignments
+  * Delete Assignment
+* Events, Projects, Tasks, etc.
+  * Move Before / After
+* Tasks
+  * Package Before / After
+  * Track Time
+  * Timer Start / Stop / Commit / Clear
+* Documents
+  * Thumbnail
+  * Download
+* Workspaces
+  * Comment Stream
+  * Upcoming Tasks
+  * Changes
+
 ## Future
 
 This library is very new and still a work in progress. Some things I would like to support in future include:
