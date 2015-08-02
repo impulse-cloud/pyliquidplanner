@@ -10,11 +10,10 @@ from .models import Model
 
 class Manager(object):
 
-    def __init__(self, config, name, url, options):
+    def __init__(self, config, name, url):
         self.config = config
         self.name = name
         self.url = url
-        self.options = options
 
         # Special plural handling for entities ending in 'y' 
         if self.name[-3:] == 'ies':
@@ -184,15 +183,12 @@ class Manager(object):
 
         return self._make_request('get', url, params=params)
 
-    def update(self, obj, id=None):
+    def update(self, id, obj):
         """Save an existing record.
         
         `id` can be omitted if set in the object.
 
         Ensure that only modifiable fields are present."""
-        if id is None:
-            id = obj.pop("id")
-
         url = self._format_url(self.url + "/{id}", {"id": id})
 
         return self._make_request('put', url, data={self.singular: obj})

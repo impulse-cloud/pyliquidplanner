@@ -115,15 +115,15 @@ class Model(dict):
 
     def timer_start(self):
         """Start the timer for a task"""
-        return self.manager.make_request('post', self.uri + '/timer/start')
+        return self.manager._make_request('post', self.uri + '/timer/start')
 
     def timer_stop(self):
         """Stop the timer for a task"""
-        return self.manager.make_request('post', self.uri + '/timer/stop')
+        return self.manager._make_request('post', self.uri + '/timer/stop')
 
     def timer_clear(self):
         """Start the timer for a task"""
-        return self.manager.make_request('post', self.uri + '/timer/clear')
+        return self.manager._make_request('post', self.uri + '/timer/clear')
 
     def comment_stream(self, params):
         """Get the comment stream for a workspace.

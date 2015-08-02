@@ -47,7 +47,7 @@ class LiquidPlanner(object):
         self.credentials = credentials
 
         for manager in self.MANAGERS:
-            setattr(self, manager[0], Manager(self, *manager))
+            setattr(self, manager[0], Manager(self, *manager[0:2]))
 
         if use_first_workspace:
             self.workspace_id = self.workspaces.all()[0]['id']

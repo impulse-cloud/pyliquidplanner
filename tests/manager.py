@@ -11,12 +11,16 @@ from mock import patch, Mock, ANY
 
 from liquidplanner import LiquidPlanner
 from liquidplanner.exceptions import *
+from liquidplanner.manager import Manager
 from liquidplanner.utils import UTC
 
 
-class MockCredentials(object):
-    def __init__(self):
-        self.auth = None
+def create_client_manager():
+    config = Mock(
+        workspace_id=1,
+        credentials=Mock(auth=None))
+
+    return Manager(config, 'clients', '/workspaces/{workspace_id}/clients')
 
 
 def create_success_response(status_code, body):
@@ -42,15 +46,17 @@ def create_error_response(status_code, title, message):
         }}""".format(message, title)
     )
 
+
 class ManagerTest(unittest.TestCase):
     @patch('requests.get')
     def test_bad_request(self, r_get):
         "Check that 400 responses are handled correctly"
         r_get.return_value = create_error_response(400, "BadRequest", "Bad Request")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerBadRequest):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -58,10 +64,11 @@ class ManagerTest(unittest.TestCase):
     def test_unauthorized(self, r_get):
         "Check that 401 responses are handled correctly"
         r_get.return_value = create_error_response(401, "Unauthorized", "Not authorized")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerUnauthorized):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -70,10 +77,11 @@ class ManagerTest(unittest.TestCase):
         "Check that 422 responses are handled correctly"
         r_get.return_value = create_error_response(422, 
             "UnprocessableEntity", "That entity can't be processed")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerUnprocessableEntity):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -82,10 +90,11 @@ class ManagerTest(unittest.TestCase):
         "Check that 404 responses are handled correctly"
         r_get.return_value = create_error_response(404, 
             "NotFound", "Cannot be found")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerNotFound):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -94,10 +103,11 @@ class ManagerTest(unittest.TestCase):
         "Check that 500 responses are handled correctly"
         r_get.return_value = create_error_response(500, 
             "InternalError", "Internal Server Error")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerInternalError):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -106,10 +116,11 @@ class ManagerTest(unittest.TestCase):
         "Check that 501 responses are handled correctly"
         r_get.return_value = create_error_response(501, 
             "NotImplemented", "Action is not implemented")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerNotImplemented):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -118,10 +129,11 @@ class ManagerTest(unittest.TestCase):
         "Check that 503 responses are handled correctly"
         r_get.return_value = create_error_response(503, 
             "ServiceUnavailable", "Service is not available")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerUnavailable):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
 
@@ -130,35 +142,23 @@ class ManagerTest(unittest.TestCase):
         "Check that unexpected response codes are handled correctly"
         r_get.return_value = create_error_response(299, 
             "NoBananas", "Yes, we have no bananas")
+        manager = create_client_manager()
 
-        # Will attempt to fetch the workspace list
+        # Trigger a 'get' request
         with self.assertRaises(LiquidPlannerException):
-            lp = LiquidPlanner(MockCredentials())
+            manager.all()
 
         self.assertTrue(r_get.called)
-
-    @patch('requests.get')
-    def test_all(self, r_get):
-        "Check that use_first_workspace works"
-
-        output = [{"id": 123, "name": "My Workspace"}]
-        r_get.return_value = create_success_response(200, expected_output) 
-
-        lp = LiquidPlanner(MockCredentials())
-
-        self.assertTrue(r_get.called)
-        self.assertTrue(lp.workspace_id == output[0]["id"])
 
     @patch('requests.get')
     def test_all(self, r_get):
         "Check that all() runs ok"
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
         expected_output = [{"id": 1}, {"id": 2}] 
         r_get.return_value = create_success_response(200, expected_output) 
+        manager = create_client_manager()
 
-        results = lp.clients.all()
+        # Trigger a 'get' request
+        results = manager.all()
 
         self.assertTrue(r_get.called)
         self.assertTrue(len(results) == len(expected_output))
@@ -167,28 +167,24 @@ class ManagerTest(unittest.TestCase):
     @patch('requests.get')
     def test_get(self, r_get):
         "Check that get() runs ok"
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
         expected_output = {"id": 1, "name": "Trevor"}
         r_get.return_value = create_success_response(200, expected_output) 
+        manager = create_client_manager()
 
-        result = lp.clients.get(1)
+        result = manager.get(1)
 
         self.assertTrue(r_get.called)
         self.assertTrue(result["name"] == expected_output["name"])
 
     @patch('requests.post')
     def test_create(self, r_post):
-        "Check that get() runs ok"
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
+        "Check that create() runs ok"
         expected_output = {"id": 1, "name": "Trevor"}
         expected_post = {"client": {"name": "Trevor"}}
         r_post.return_value = create_success_response(201, expected_output) 
+        manager = create_client_manager()
 
-        result = lp.clients.create({"name": "Trevor"})
+        result = manager.create({"name": "Trevor"})
 
         self.assertTrue(r_post.called)
         r_post.assert_called_with(ANY, data=json.dumps(expected_post),
@@ -197,24 +193,14 @@ class ManagerTest(unittest.TestCase):
     @patch('requests.put')
     def test_update(self, r_put):
         "Check that update() runs ok"
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
         expected_output = {"id": 1, "name": "Trevor"}
         expected_put = {"client": {"name": "Trevor"}}
         r_put.return_value = create_success_response(200, expected_output) 
-
-        # id should be stripped from the object
-        result = lp.clients.update({"id": 1, "name": "Trevor"})
-
-        self.assertTrue(r_put.called)
-        r_put.assert_called_with(ANY, data=json.dumps(expected_put),
-                auth=ANY, headers=ANY, timeout=ANY, params=ANY)
+        manager = create_client_manager()
 
         # id as a parameter
-        r_put.reset_mock()
         r_put.return_value = create_success_response(200, expected_output) 
-        result = lp.clients.update({"name": "Trevor"}, 1)
+        result = manager.update(1, {"name": "Trevor"})
 
         self.assertTrue(r_put.called)
         r_put.assert_called_with(ANY, data=json.dumps(expected_put),
@@ -223,14 +209,12 @@ class ManagerTest(unittest.TestCase):
     @patch('requests.put')
     def test_date_encoding(self, r_put):
         """Check that dates are JSON encoded correctly"""
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
         obj = {"date": datetime.datetime(2015, 5, 2, 10, 0, 0, 0, tzinfo=UTC())}
         expected_data = '{"client": {"date": "2015-05-02T10:00:00+00:00"}}'
+        manager = create_client_manager()
 
         r_put.return_value = create_success_response(200, {})
-        lp.clients.update(obj, 1)
+        manager.update(1, obj)
         
         r_put.assert_called_with(ANY, data=expected_data,
                 auth=ANY, headers=ANY, timeout=ANY, params=ANY)
@@ -238,14 +222,12 @@ class ManagerTest(unittest.TestCase):
     @patch('requests.delete')
     def test_delete(self, r_delete):
         "Check that delete() runs ok"
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
-        lp.workspace_id = 1
-
         expected_output = {}
         r_delete.return_value = create_success_response(200, expected_output) 
+        manager = create_client_manager()
 
         # id should be stripped from the object
-        result = lp.clients.delete(1)
+        result = manager.delete(1)
 
         self.assertTrue(r_delete.called)
         r_delete.assert_called_with(ANY, data=None,
@@ -254,13 +236,13 @@ class ManagerTest(unittest.TestCase):
     def test_singular(self):
         "Make sure object singular names are determined correctly"
 
-        lp = LiquidPlanner(MockCredentials(), use_first_workspace=False)
+        credentials = Mock(auth=None)
 
-        self.assertEqual(lp.projects.singular, "project")
+        self.assertEqual(Manager({}, 'projects', '/').singular, "project")
 
-        self.assertEqual(lp.account.singular, "account")
+        self.assertEqual(Manager({}, 'accounts', '/').singular, "account")
 
-        self.assertEqual(lp.custom_fields.singular, "custom_field")
+        self.assertEqual(Manager({}, 'custom_fields', '/').singular, "custom_field")
 
-        self.assertEqual(lp.activities.singular, "activity")
+        self.assertEqual(Manager({}, 'activities', '/').singular, "activity")
 
