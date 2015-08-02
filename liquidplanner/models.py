@@ -1,5 +1,6 @@
 import dateutil.parser
 import re
+from six import iteritems
 
 
 class Model(dict):
@@ -20,7 +21,7 @@ class Model(dict):
     def _convert_dates(self, data):
         """Recursively search through data for string that look like dates and convert
         them to datetime.datetime objects"""
-        for key, value in data.iteritems():
+        for key, value in iteritems(data):
             if isinstance(value, basestring) and self.DATE_REGEX.match(value):
                 # This is a date! Convert it
                 data[key] = dateutil.parser.parse(value)
