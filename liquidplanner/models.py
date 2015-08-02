@@ -152,55 +152,55 @@ class Model(dict):
     @property
     def activities(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'activities', self.uri + '/activities', {})
+        return Manager(self.manager.config, 'activities', self.uri + '/activities')
 
     @property
     def comments(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'comments', self.uri + '/comments', {})
+        return Manager(self.manager.config, 'comments', self.uri + '/comments')
 
     @property
     def dependencies(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'dependencies', self.uri + '/dependencies', {})
+        return Manager(self.manager.config, 'dependencies', self.uri + '/dependencies')
 
     @property
     def dependents(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'dependents', self.uri + '/dependents', {})
+        return Manager(self.manager.config, 'dependents', self.uri + '/dependents')
 
     @property
     def documents(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'documents', self.uri + '/documents', {})
+        return Manager(self.manager.config, 'documents', self.uri + '/documents')
     
     @property
     def estimates(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'estimates', self.uri + '/estimates', {})
+        return Manager(self.manager.config, 'estimates', self.uri + '/estimates')
 
     @property
     def links(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'links', self.uri + '/links', {})
+        return Manager(self.manager.config, 'links', self.uri + '/links')
 
     @property
     def note(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'note', self.uri + '/note', {})
+        return Manager(self.manager.config, 'note', self.uri + '/note')
 
     @property
     def snapshots(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'snapshots', self.uri + '/snapshots', {})
+        return Manager(self.manager.config, 'snapshots', self.uri + '/snapshots')
 
     @property
     def tags(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'tags', self.uri + '/tags', {})
+        return Manager(self.manager.config, 'tags', self.uri + '/tags')
 
     @property
     def timer(self):
         from .manager import Manager
-        return Manager(self.manager.config, 'timer', self.uri + '/timer', {})
+        return Manager(self.manager.config, 'timer', self.uri + '/timer')
 

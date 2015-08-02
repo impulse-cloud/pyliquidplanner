@@ -16,6 +16,7 @@ class MockManager(object):
     def __init__(self):
         self._make_request = Mock()
         self.singular = Mock()
+        self.config = {}
 
 
 class ModelTest(unittest.TestCase):
@@ -217,3 +218,22 @@ class ModelTest(unittest.TestCase):
 
         manager._make_request.assert_called_with('get', '/uri/1/changes',
                 params=params)
+
+    def test_related_managers(self):
+        """Check that related managers are created on demand"""
+        data = {}
+        manager = MockManager()
+        model = Model(manager, data, "/uri/1")
+
+        # If an exception is thrown, it will make the test fail
+        model.activities
+        model.comments
+        model.dependencies
+        model.dependents
+        model.documents
+        model.estimates
+        model.links
+        model.note
+        model.snapshots
+        model.tags
+        model.timer
