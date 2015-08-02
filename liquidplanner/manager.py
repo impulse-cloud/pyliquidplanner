@@ -186,8 +186,6 @@ class Manager(object):
     def update(self, id, obj):
         """Save an existing record.
         
-        `id` can be omitted if set in the object.
-
         Ensure that only modifiable fields are present."""
         url = self._format_url(self.url + "/{id}", {"id": id})
 

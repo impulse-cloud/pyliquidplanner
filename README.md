@@ -126,12 +126,10 @@ Note: The LiquidPlanner REST API requires the data to be wrapped with the single
 
 ### Updating
 
-Updating records is similar to creating. The record id can either be in the dictionary, or passed as a parameter.
+Updating records is similar to creating, but the record id must be supplied.
 
 ```python
->>> client = lp.clients.update({'name': 'New Client Name', 'id': 1234})
->>> # OR
->>> client = lp.clients.update({'name': 'New Client Name'}, 1234)
+>>> client = lp.clients.update(1234, {'name': 'New Client Name'})
 ```
 
 ### Associated Objects
