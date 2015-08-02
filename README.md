@@ -1,6 +1,8 @@
 PyLiquidPlanner
 ===============
 
+[![Build Status](https://travis-ci.org/impulse-cloud/pyliquidplanner.svg?branch=master)](https://travis-ci.org/impulse-cloud/pyliquidplanner)
+
 Python wrapper for the Liquid Planner REST API.
 
 The code is inspired by [PyXero](http://github.com/freakboy3742/pyxero), and aims to offer an ORM style of accessing the API.
