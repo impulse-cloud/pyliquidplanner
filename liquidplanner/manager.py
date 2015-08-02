@@ -37,7 +37,7 @@ class Manager(object):
 
         # Set a user-agent so LiquidPlanner knows the traffic is 
         # coming from pyliquidplanner
-        headers['User-Agent'] = 'pyliquidplanner/{} {}'.format(
+        headers['User-Agent'] = 'pyliquidplanner/{0} {1}'.format(
                 VERSION, requests.utils.default_user_agent())
 
         # Make sure we get the expected API version

@@ -24,7 +24,7 @@ class ModelTest(unittest.TestCase):
         "Check that string dates are converted into python dates"
         data = {
                 "some_date": "not a date",
-                "other_date": "2015-01-01T09:10:20+00:00",
+                "other_date": u"2015-01-01T09:10:20+00:00",
                 "nested": [{"extra_date": "2015-01-10T00:00:01+00:00"}]}
 
         manager = MockManager()

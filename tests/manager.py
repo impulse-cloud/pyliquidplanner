@@ -40,8 +40,8 @@ def create_error_response(status_code, title, message):
         status_code=status_code,
         headers={'content-type': 'application/json'},
         text="""{{
-            "message": "{}",
-            "error": "{}",
+            "message": "{0}",
+            "error": "{1}",
             "type": "Error"
         }}""".format(message, title)
     )
