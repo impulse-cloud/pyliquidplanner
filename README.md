@@ -9,13 +9,13 @@ The code is inspired by [PyXero](http://github.com/freakboy3742/pyxero), and aim
 
 ## Installation
 
-At present, the library is not available in PyPI but can be installed from GitHub:
+The library is available on PyPI and can be installed with either pip or easy_install:
 
 ```
-pip install git+git://github.com/impulse-cloud/pyliquidplanner.git
+pip install pyliquidplanner
 ```
 
-Alternatively, if you don't have Git installed:
+Alternatively, if you'd like to install the latest from source:
 
 ```
 pip install --upgrade https://github.com/impulse-cloud/pyliquidplanner/tarball/master
