@@ -11,9 +11,11 @@ with io.open('./liquidplanner/__init__.py', encoding='utf8') as version_file:
     else:
         raise RuntimeError("Unable to find version string.")
 
-
-with io.open('README.md', encoding='utf8') as readme:
-    long_description = readme.read()
+try:
+    with io.open('README.md', encoding='utf8') as readme:
+        long_description = readme.read()
+except IOError:
+    long_description = None
 
 
 setup(
