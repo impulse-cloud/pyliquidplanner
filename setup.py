@@ -19,12 +19,15 @@ with io.open('README.md', encoding='utf8') as readme:
 setup(
     name='pyliquidplanner',
     version=version,
-    description='Python API for accessing the REST API of the Liquid Planner project management tool',
+    description='Python library for accessing the REST API of the Liquid Planner project management tool',
     long_description=long_description,
     author="Gavin Hodge",
     author_email="gavin.hodge@gmail.com",
     url="https://github.com/gavinhodge/pyliquidplanner",
+    download_url="https://github.com/gavinhodge/pyliquidplanner/tarball/{0}".format(version),
     packages=['liquidplanner', ],
+    keywords=['liquidplanner', 'liquid', 'planner', 'project', 'management'],
+    classifiers=[],
     install_requires=[
         'requests>=2.7.0',
         'python-dateutil>=2.4.2',
